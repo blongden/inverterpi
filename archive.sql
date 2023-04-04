@@ -1,0 +1,3 @@
+insert into agg_register_history select strftime('%H:%M', datetime(min(register_history.date_created), 'localtime')) as hour, min(state) as min, max(state) as max, round(avg(state), 0) as mean, datetime(min(register_history.date_created), 'localtime') as from_datetime, datetime(max(register_history.date_created), 'localtime') as to_datetime from registers left join register_history on id = register_id and register_history.date_created < date() and register_history.state > 0 where name = 'current_generation' group by strftime('%Y-%m-%d %H', register_history.date_created) || cast(strftime(' %M', register_history.date_created)/10 as int);
+delete from register_history where register_history.date_created < date();
+vacuum;
